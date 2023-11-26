@@ -3,14 +3,8 @@ const http = require('http');
 const socketIO = require('socket.io');
 const path = require('path');
 const fs = require('fs');
-
-// Create a new express application
 const app = express();
-
-// Create an HTTP server
 const server = http.createServer(app);
-
-// Integrate Socket.IO
 const io = socketIO(server);
 
 // Serve index.html on the root route
@@ -18,6 +12,7 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
 
+// Serve chat.html on the /chat route
 app.get('/chat', (req, res) => {
     res.sendFile(path.join(__dirname, 'chat.html'));
 });
@@ -28,7 +23,13 @@ io.on('connection', (socket) => {
 
 
     //실제 함수 on이 붙은 곳이 함수 정의하는 곳, emit이 함수 실행하는 곳
+    //html 쪽도 마찬가지
+    //io.emit - public
+    //io.to(recipientId).emit - private
+    //socket.broadcast.emit - broadcast
+    //socket.broadcast.emit - breadcast
 
+    //index.html을 위한 함수
     socket.on("messageme",function (data) {
     	let log = data + ' from ' + socket.id;
     	console.log(log);
@@ -41,6 +42,7 @@ io.on('connection', (socket) => {
     	io.emit("logtoclient",(log));
     })
 
+    //chat.html을 위한 함수
     socket.on("message",function (data) {
     	console.log(data + ' from ' + socket.id);
     	io.emit("message",(socket.id + " : " + data));
