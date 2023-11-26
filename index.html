@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Socket.IO Test</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        $(function () {
+            var socket = io();
+
+            // 'hello' 버튼 클릭 이벤트
+            $('#helloall').click(function() {
+                socket.emit('messageall', 'hello');
+            });
+            $('#hellome').click(function() {
+                socket.emit('messageme', 'hello');
+            });
+            socket.on('logtoclient',function(data){
+                $('#logs').text(data);
+            })
+        });
+        
+    </script>
+</head>
+<body>
+    <button id = "helloall">hello to all</button>
+    <button id = "hellome">hello to me</button>
+    <div id = "logs">
+        logs here
+    </div>
+</body>
+</html>
